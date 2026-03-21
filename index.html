@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>chat.sh — Terminal-native AI assistant manager</title>
+<title>chat.sh — Terminal-native AI REPL manager</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
     --bg: #0a0a0a;
-    --green: #ffb000;
+    --amber: #ffb000;
     --muted: #664400;
     --border: #332200;
     --fg: #ffe080;
@@ -22,32 +25,27 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 60px 20px;
   }
   .container { max-width: 680px; width: 100%; }
-  .label { font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-bottom: 16px; }
-  h1 { font-size: 48px; color: var(--green); letter-spacing: -0.02em; margin-bottom: 12px; }
-  .tagline { font-size: 14px; color: var(--muted); margin-bottom: 48px; line-height: 1.6; }
-  .terminal-window {
+
+  /* Hero */
+  .hero { display: flex; align-items: center; gap: 20px; margin-bottom: 12px; }
+  .hero img { width: 64px; height: 64px; }
+  h1 { font-size: 52px; color: var(--amber); letter-spacing: -0.02em; }
+  .label { font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-bottom: 10px; }
+  .tagline { font-size: 13px; color: var(--muted); margin-bottom: 48px; line-height: 1.7; }
+
+  /* Screenshot */
+  .screenshot {
+    width: 100%;
     border: 1px solid var(--border);
-    border-top: 2px solid var(--green);
+    border-top: 2px solid var(--amber);
     margin-bottom: 48px;
-    overflow: hidden;
+    display: block;
   }
-  .terminal-bar {
-    background: #0d0d0d;
-    padding: 6px 12px;
-    border-bottom: 1px solid var(--border);
-    font-size: 10px;
-    color: var(--muted);
-    display: flex;
-    gap: 12px;
-  }
-  .terminal-bar span.active { color: var(--green); border-bottom: 1px solid var(--green); }
-  .terminal-body { padding: 16px; font-size: 13px; line-height: 1.8; color: #aa8833; }
-  .terminal-body .prompt { color: var(--green); }
-  .terminal-body .cmd { color: var(--fg); }
-  .terminal-body .output { color: var(--muted); }
+
+  /* Features */
   .features {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -56,19 +54,25 @@
     border: 1px solid var(--border);
     margin-bottom: 48px;
   }
-  .feature {
-    background: var(--bg);
-    padding: 16px;
-    font-size: 12px;
-  }
-  .feature .title { color: var(--green); margin-bottom: 4px; letter-spacing: 0.05em; }
+  .feature { background: var(--bg); padding: 16px; font-size: 12px; }
+  .feature .title { color: var(--amber); margin-bottom: 4px; letter-spacing: 0.05em; }
   .feature .desc { color: var(--muted); line-height: 1.5; }
+
+  /* Shortcuts */
+  .shortcuts { margin-bottom: 48px; }
+  .shortcuts h2 { font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-bottom: 12px; }
+  .shortcuts table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .shortcuts td { padding: 5px 8px; border-bottom: 1px solid var(--border); }
+  .shortcuts td:first-child { color: var(--amber); width: 160px; }
+  .shortcuts td:last-child { color: var(--muted); }
+
+  /* Download */
   .download-section { margin-bottom: 48px; }
-  .download-section h2 { font-size: 12px; color: var(--muted); letter-spacing: 0.15em; margin-bottom: 16px; }
+  .download-section h2 { font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-bottom: 16px; }
   .download-btn {
     display: inline-block;
-    border: 1px solid var(--green);
-    color: var(--green);
+    border: 1px solid var(--amber);
+    color: var(--amber);
     padding: 10px 24px;
     text-decoration: none;
     font-size: 12px;
@@ -77,86 +81,96 @@
     margin-bottom: 12px;
     transition: all 0.15s;
   }
-  .download-btn:hover { background: var(--green); color: var(--bg); }
+  .download-btn:hover { background: var(--amber); color: var(--bg); }
   .brew-cmd {
     background: #0d0d0d;
     border: 1px solid var(--border);
     padding: 12px 16px;
     font-size: 12px;
     color: var(--fg);
-    margin-top: 16px;
+    margin-top: 12px;
+    line-height: 1.8;
   }
   .brew-cmd .comment { color: var(--muted); }
+
   footer { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
   footer a { color: var(--muted); text-decoration: none; }
-  footer a:hover { color: var(--green); }
+  footer a:hover { color: var(--amber); }
 </style>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 </head>
 <body>
 <div class="container">
-  <img src="https://raw.githubusercontent.com/jchang6513/chatsh/main/docs/icon.png" width="80" style="margin-bottom:16px;display:block;" alt="chat.sh icon">
-  <div class="label">[ BETA v0.1.0 ]</div>
-  <h1>chat.sh</h1>
-  <p class="tagline">Terminal-native desktop app for managing multiple AI coding assistants.<br>Claude Code, Codex, Gemini — all in one window.</p>
 
-  <img 
-    src="https://raw.githubusercontent.com/jchang6513/chatsh/main/docs/screenshot.png" 
-    style="width:100%;border:1px solid var(--border);border-top:2px solid var(--green);margin-bottom:48px;display:block;" 
+  <div class="label">[ BETA v0.1.2 ]</div>
+  <div class="hero">
+    <img src="https://raw.githubusercontent.com/jchang6513/chatsh/main/docs/icon.png" alt="chat.sh icon">
+    <h1>chat.sh</h1>
+  </div>
+  <p class="tagline">
+    Terminal-native desktop app for managing AI coding assistants.<br>
+    Claude Code, Codex, Gemini CLI — all in one window. ~4MB, no Electron.
+  </p>
+
+  <img
+    src="https://raw.githubusercontent.com/jchang6513/chatsh/main/docs/screenshot.png"
+    class="screenshot"
     alt="chat.sh screenshot"
   >
 
-  <div class="terminal-window" style="display:none">
-    <div class="terminal-bar">
-      <span class="active">工程助手</span>
-      <span>Shell 1</span>
-      <span>Shell 2</span>
-      <span>+ shell</span>
-    </div>
-    <div class="terminal-body">
-      <div><span class="prompt">─ CLAUDE CODE ─</span> <span class="output">~/.chatsh/agents/claude &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [CLAUDE.MD] [RESTART]</span></div>
-      <div>&nbsp;</div>
-      <div><span class="output">&nbsp;&nbsp;&nbsp;╭───────────────────────────────────────╮</span></div>
-      <div><span class="output">&nbsp;&nbsp;&nbsp;│ ✻ Welcome to Claude Code!             │</span></div>
-      <div><span class="output">&nbsp;&nbsp;&nbsp;╰───────────────────────────────────────╯</span></div>
-      <div>&nbsp;</div>
-      <div><span class="prompt">&gt; </span><span class="cmd">_</span></div>
-    </div>
-  </div>
-
   <div class="features">
     <div class="feature">
-      <div class="title">MULTI-AGENT</div>
-      <div class="desc">Claude Code, Codex, Gemini, Aider — or any CLI tool</div>
+      <div class="title">MULTI-REPL</div>
+      <div class="desc">Claude Code, Codex, Gemini, Zsh, Python, Node — side by side</div>
+    </div>
+    <div class="feature">
+      <div class="title">TEMPLATES</div>
+      <div class="desc">Auto-detects installed CLIs. Save custom templates with system prompts</div>
     </div>
     <div class="feature">
       <div class="title">SYSTEM PROMPTS</div>
-      <div class="desc">Per-agent CLAUDE.md, isolated from your project</div>
+      <div class="desc">Per-REPL CLAUDE.md / GEMINI.md / AGENTS.md, fully isolated</div>
     </div>
     <div class="feature">
-      <div class="title">THEME SYSTEM</div>
-      <div class="desc">8 color schemes, synced to terminal ANSI colors</div>
+      <div class="title">SHELL TABS</div>
+      <div class="desc">Add, rename, close shell tabs per panel. Stable numbering</div>
     </div>
     <div class="feature">
-      <div class="title">SHELL SESSIONS</div>
-      <div class="desc">Add, remove, rename shell tabs per agent panel</div>
+      <div class="title">KEYBOARD FIRST</div>
+      <div class="desc">⌘K palette, ⌘1-9, ⌘T/W shell tabs, ⌘R restart, ⌘, prefs</div>
     </div>
+    <div class="feature">
+      <div class="title">THEMES</div>
+      <div class="desc">8 color schemes synced to terminal ANSI colors. Amber default</div>
+    </div>
+  </div>
+
+  <div class="shortcuts">
+    <h2>KEYBOARD SHORTCUTS</h2>
+    <table>
+      <tr><td>⌘1–9</td><td>Switch to REPL</td></tr>
+      <tr><td>⌘[ / ⌘]</td><td>Previous / Next REPL</td></tr>
+      <tr><td>⌘K</td><td>Command Palette</td></tr>
+      <tr><td>⌘N</td><td>New REPL</td></tr>
+      <tr><td>⌘R</td><td>Restart REPL</td></tr>
+      <tr><td>⌘T / ⌘W</td><td>New / Close shell tab</td></tr>
+      <tr><td>⌘Shift+[ / ]</td><td>Switch shell tab</td></tr>
+      <tr><td>⌘,</td><td>Preferences</td></tr>
+      <tr><td>Esc</td><td>Close overlay</td></tr>
+    </table>
   </div>
 
   <div class="download-section">
     <h2>DOWNLOAD</h2>
-    <a class="download-btn" href="https://github.com/jchang6513/chatsh/releases/download/v0.1.0/chatsh_0.1.0_aarch64.dmg">
+    <a class="download-btn" href="https://github.com/jchang6513/chatsh/releases/latest">
       [↓ macOS Apple Silicon .dmg]
     </a>
     <div class="brew-cmd">
-      <span class="comment"># or via Homebrew</span><br>
+      <span class="comment"># Homebrew</span><br>
       brew tap jchang6513/chatsh<br>
       brew install --cask chatsh
     </div>
-    <div class="brew-cmd" style="margin-top:8px">
-      <span class="comment"># first launch (unsigned build)</span><br>
+    <div class="brew-cmd">
+      <span class="comment"># First launch (unsigned)</span><br>
       right-click → Open
     </div>
   </div>
@@ -166,7 +180,7 @@
     &nbsp;·&nbsp;
     MIT License
     &nbsp;·&nbsp;
-    Built with Tauri + xterm.js
+    Tauri v2 + xterm.js
   </footer>
 </div>
 </body>
