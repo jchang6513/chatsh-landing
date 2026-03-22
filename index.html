@@ -83,8 +83,24 @@
     color: var(--fg);
     margin-bottom: 12px;
     line-height: 2;
+    position: relative;
   }
   .brew-cmd .comment { color: var(--muted); }
+  .copy-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 2px 8px;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { border-color: var(--green); color: var(--green); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); }
 
   /* Features */
   .features {
@@ -163,11 +179,13 @@
         [↓ macOS Apple Silicon .dmg]
       </a>
       <div class="brew-cmd">
+        <button class="copy-btn" onclick="copyCmd(this, 'brew tap jchang6513/chatsh\nbrew install --cask chatsh')">[copy]</button>
         <span class="comment"># Homebrew</span><br>
         brew tap jchang6513/chatsh<br>
         brew install --cask chatsh
       </div>
       <div class="brew-cmd">
+        <button class="copy-btn" onclick="copyCmd(this, 'xattr -cr /Applications/chat.sh.app')">[copy]</button>
         <span class="comment"># If macOS says "app is damaged"</span><br>
         xattr -cr /Applications/chat.sh.app
       </div>
@@ -224,5 +242,17 @@
     Tauri v2 + xterm.js
   </footer>
 </div>
+<script>
+function copyCmd(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '[copied]';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '[copy]';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
 </body>
 </html>
