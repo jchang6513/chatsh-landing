@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>chat.sh — Terminal-native AI Pane manager</title>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/x-icon" href="./favicon.ico">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -27,7 +27,7 @@
     justify-content: center;
     padding: 60px 20px;
   }
-  .container { max-width: 680px; width: 100%; }
+  .container { max-width: 900px; width: 100%; }
 
   /* Hero */
   .hero { display: flex; align-items: center; gap: 20px; margin-bottom: 12px; }
@@ -36,14 +36,54 @@
   .label { font-size: 14px; color: var(--muted); letter-spacing: 0.15em; margin-bottom: 10px; }
   .tagline { font-size: 16px; color: var(--muted); margin-bottom: 48px; line-height: 1.7; }
 
-  /* Screenshot */
+  /* Screenshot + Install side by side */
+  .hero-section {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 32px;
+    align-items: start;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 700px) {
+    .hero-section { grid-template-columns: 1fr; }
+  }
   .screenshot {
     width: 100%;
     border: 1px solid var(--border);
     border-top: 2px solid var(--green);
-    margin-bottom: 48px;
     display: block;
   }
+
+  /* Install panel */
+  .install-panel h2 {
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+  }
+  .download-btn {
+    display: block;
+    border: 1px solid var(--green);
+    color: var(--green);
+    padding: 12px 16px;
+    text-decoration: none;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .download-btn:hover { background: var(--green); color: var(--bg); }
+  .brew-cmd {
+    background: #0d0d0d;
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--fg);
+    margin-bottom: 12px;
+    line-height: 2;
+  }
+  .brew-cmd .comment { color: var(--muted); }
 
   /* Features */
   .features {
@@ -56,7 +96,7 @@
   }
   .feature { background: var(--bg); padding: 16px; font-size: 15px; }
   .feature .title { color: var(--green); margin-bottom: 4px; letter-spacing: 0.05em; }
-  .feature .desc { color: var(--muted); line-height: 1.5; }
+  .feature .desc { color: var(--muted); line-height: 1.5; font-size: 14px; }
 
   /* Shortcuts */
   .shortcuts { margin-bottom: 48px; }
@@ -66,34 +106,7 @@
   .shortcuts td:first-child { color: var(--green); width: 160px; }
   .shortcuts td:last-child { color: var(--muted); }
 
-  /* Download */
-  .download-section { margin-bottom: 48px; }
-  .download-section h2 { font-size: 14px; color: var(--muted); letter-spacing: 0.15em; margin-bottom: 16px; }
-  .download-btn {
-    display: inline-block;
-    border: 1px solid var(--green);
-    color: var(--green);
-    padding: 10px 24px;
-    text-decoration: none;
-    font-size: 15px;
-    letter-spacing: 0.1em;
-    margin-right: 12px;
-    margin-bottom: 12px;
-    transition: all 0.15s;
-  }
-  .download-btn:hover { background: var(--green); color: var(--bg); }
-  .brew-cmd {
-    background: #0d0d0d;
-    border: 1px solid var(--border);
-    padding: 12px 16px;
-    font-size: 15px;
-    color: var(--fg);
-    margin-top: 12px;
-    line-height: 1.8;
-  }
-  .brew-cmd .comment { color: var(--muted); }
-
-  footer { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; }
+  footer { font-size: 14px; color: var(--muted); letter-spacing: 0.08em; }
   footer a { color: var(--muted); text-decoration: none; }
   footer a:hover { color: var(--green); }
 </style>
@@ -101,7 +114,7 @@
 <body>
 <div class="container">
 
-  <div class="label">[ BETA v0.1.6 ]</div>
+  <div class="label">[ BETA v0.1.7 ]</div>
   <div class="hero">
     <img src="https://raw.githubusercontent.com/jchang6513/chatsh/main/docs/icon.png" alt="chat.sh icon">
     <h1>chat.sh</h1>
@@ -111,20 +124,42 @@
     Claude Code, Codex, Gemini CLI — all in one window. ~4MB, no Electron.
   </p>
 
-  <img
-    src="https://raw.githubusercontent.com/jchang6513/chatsh/main/docs/screenshot.png"
-    class="screenshot"
-    alt="chat.sh screenshot"
-  >
+  <div class="hero-section">
+    <img
+      src="https://raw.githubusercontent.com/jchang6513/chatsh/main/docs/screenshot.png"
+      class="screenshot"
+      alt="chat.sh screenshot"
+    >
+
+    <div class="install-panel">
+      <h2>INSTALL</h2>
+      <a class="download-btn" href="https://github.com/jchang6513/chatsh/releases/latest">
+        [↓ macOS Apple Silicon .dmg]
+      </a>
+      <div class="brew-cmd">
+        <span class="comment"># Homebrew</span><br>
+        brew tap jchang6513/chatsh<br>
+        brew install --cask chatsh
+      </div>
+      <div class="brew-cmd">
+        <span class="comment"># If macOS says "app is damaged"</span><br>
+        xattr -cr /Applications/chat.sh.app
+      </div>
+    </div>
+  </div>
 
   <div class="features">
     <div class="feature">
+      <div class="title">SESSION PERSISTENCE</div>
+      <div class="desc">Panes survive app restart via background daemon. Claude, Gemini, Codex sessions keep running even when app is closed</div>
+    </div>
+    <div class="feature">
       <div class="title">MULTI-PANE</div>
-      <div class="desc">Claude Code, Codex, Gemini, Zsh, Python, Node — side by side. Right-click to Edit / Duplicate / Restart</div>
+      <div class="desc">Claude Code, Codex, Gemini, Zsh — side by side. Right-click to Edit / Duplicate / Restart</div>
     </div>
     <div class="feature">
       <div class="title">TEMPLATES</div>
-      <div class="desc">Auto-detects installed CLIs. Save custom templates with system prompts</div>
+      <div class="desc">Built-in templates for Claude, Gemini, Codex, Zsh. Add custom templates with system prompts</div>
     </div>
     <div class="feature">
       <div class="title">SYSTEM PROMPTS</div>
@@ -136,11 +171,7 @@
     </div>
     <div class="feature">
       <div class="title">KEYBOARD FIRST</div>
-      <div class="desc">⌘K palette, ⌘1-9, ⌘T/W shell tabs, ⌘= zoom, ⌘, prefs</div>
-    </div>
-    <div class="feature">
-      <div class="title">THEMES</div>
-      <div class="desc">System notifications + sound when Pane finishes. 11 color schemes, UI zoom, sidebar position</div>
+      <div class="desc">⌘K palette, ⌘1-9, ⌘T/W shell tabs, ⌘= zoom, ⌘, prefs. 11 color schemes</div>
     </div>
   </div>
 
@@ -157,22 +188,6 @@
       <tr><td>⌘,</td><td>Preferences</td></tr>
       <tr><td>Esc</td><td>Close overlay</td></tr>
     </table>
-  </div>
-
-  <div class="download-section">
-    <h2>DOWNLOAD</h2>
-    <a class="download-btn" href="https://github.com/jchang6513/chatsh/releases/latest">
-      [↓ macOS Apple Silicon .dmg]
-    </a>
-    <div class="brew-cmd">
-      <span class="comment"># Homebrew</span><br>
-      brew tap jchang6513/chatsh<br>
-      brew install --cask chatsh
-    </div>
-    <div class="brew-cmd">
-      <span class="comment"># If macOS says "app is damaged"</span><br>
-      xattr -cr /Applications/chat.sh.app
-    </div>
   </div>
 
   <footer>
